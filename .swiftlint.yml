@@ -1,0 +1,11 @@
+disabled_rules:
+  - line_length         # Ignores long lines (great for mock data and SwiftUI ViewBuilders)
+  - trailing_whitespace # Ignores trailing spaces
+
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+
+excluded:
+  - Pods
+  - DerivedData
