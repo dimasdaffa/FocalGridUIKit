@@ -14,6 +14,8 @@ final class DetailCardViewController: UIViewController {
     private let viewModel: DetailCardViewModel
 
     private let scrollView = UIScrollView()
+    private var ctaView: UIView? // Reference for layout inset calculation
+    
     private let contentStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -25,7 +27,7 @@ final class DetailCardViewController: UIViewController {
     init(type: CompositionType) {
         self.viewModel = DetailCardViewModel(type: type)
         super.init(nibName: nil, bundle: nil)
-        hidesBottomBarWhenPushed = true // hide the tab bar in the reader flow
+        hidesBottomBarWhenPushed = true
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -43,8 +45,16 @@ final class DetailCardViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Dashboard hides the nav bar; restore it for the detail/reader flow.
         navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let cta = ctaView {
+            let bottomInset = cta.frame.height + 24
+            scrollView.contentInset.bottom = bottomInset
+            scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+        }
     }
 
     // MARK: - Scaffold
@@ -54,7 +64,7 @@ final class DetailCardViewController: UIViewController {
         scrollView.addSubview(contentStack)
 
         scrollView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         contentStack.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -81,7 +91,7 @@ final class DetailCardViewController: UIViewController {
         container.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(24)
-            make.height.equalTo(200) // ponytail: fixed slot; scaleAspectFit centers whatever exists
+            make.height.equalTo(200)
         }
 
         let wrapper = UIView()
@@ -211,7 +221,7 @@ final class DetailCardViewController: UIViewController {
         hstack.axis = .horizontal
         hstack.spacing = 12
         hstack.alignment = .center
-        hstack.isUserInteractionEnabled = false // let the row capture the tap
+        hstack.isUserInteractionEnabled = false
 
         row.addSubview(hstack)
         hstack.snp.makeConstraints { make in
@@ -230,11 +240,10 @@ final class DetailCardViewController: UIViewController {
 
         view.addSubview(cta)
         cta.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-12)
         }
-        scrollView.snp.makeConstraints { make in
-            make.bottom.equalTo(cta.snp.top)
-        }
+        self.ctaView = cta
     }
 
     // MARK: - Navigation

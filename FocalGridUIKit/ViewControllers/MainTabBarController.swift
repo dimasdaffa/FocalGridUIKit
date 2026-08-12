@@ -28,7 +28,7 @@ final class MainTabBarController: UITabBarController {
         )
 
         viewControllers = [home, gallery]
-        tabBar.tintColor = .themeMaple
+//        tabBar.tintColor = .themeMaple
     }
 }
 
