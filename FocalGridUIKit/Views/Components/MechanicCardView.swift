@@ -137,3 +137,27 @@ final class MechanicCardView: UIView {
         if bottom > 0 { addSpacer(bottom) }
     }
 }
+
+#Preview("Mechanic Card — Image Bottom") {
+    let mechanic = Composition.mockCompositions[0].mechanics[0]
+    let card = MechanicCardView(mechanic: mechanic, isLast: false)
+
+    card.snp.makeConstraints { make in
+        make.width.equalTo(390)
+        make.height.equalTo(800)
+    }
+
+    return card
+}
+
+#Preview("Mechanic Card — Text Centered (last)") {
+    let mechanic = Composition.mockCompositions[0].mechanics[1]
+    let card = MechanicCardView(mechanic: mechanic, isLast: true)
+
+    card.snp.makeConstraints { make in
+        make.width.equalTo(390)
+        make.height.equalTo(720)
+    }
+
+    return card
+}

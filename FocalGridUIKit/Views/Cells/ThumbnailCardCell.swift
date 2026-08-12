@@ -34,3 +34,11 @@ final class ThumbnailCardCell: UITableViewCell {
         card.onLearnTapped = onLearnTapped
     }
 }
+
+#Preview("Thumbnail Card Cell") {
+    let cell = ThumbnailCardCell()
+    cell.configure(with: .ruleOfThirds) {
+        print("Learn tapped")
+    }
+    return cell
+}

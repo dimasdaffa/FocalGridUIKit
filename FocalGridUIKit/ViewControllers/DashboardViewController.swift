@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class DashboardViewController: UIViewController {
 
@@ -93,4 +94,15 @@ extension DashboardViewController: UITableViewDataSource, UITableViewDelegate {
         let detail = DetailCardViewController(type: type)
         navigationController?.pushViewController(detail, animated: true)
     }
+}
+
+private struct DashboardPreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UINavigationController {
+        UINavigationController(rootViewController: DashboardViewController())
+    }
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+}
+
+#Preview("Dashboard View Controller") {
+    DashboardPreviewWrapper()
 }

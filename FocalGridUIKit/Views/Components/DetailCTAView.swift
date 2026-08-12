@@ -98,3 +98,16 @@ final class DetailCTAView: UIView {
     @objc private func readTapped() { onStartReadingTapped?() }
     @objc private func cameraTapped() { onCameraTapped?() }
 }
+
+#Preview("Detail CTA View") {
+    let cta = DetailCTAView(index: 1, title: "The 3x3 Grid Matrix", themeColor: .themeMaple)
+    cta.onStartReadingTapped = { print("Read tapped") }
+    cta.onCameraTapped = { print("Camera tapped") }
+
+    cta.snp.makeConstraints { make in
+        make.width.equalTo(390)
+        make.height.equalTo(100)
+    }
+
+    return cta
+}

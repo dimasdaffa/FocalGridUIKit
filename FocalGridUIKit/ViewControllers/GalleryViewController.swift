@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class GalleryViewController: UIViewController {
 
@@ -28,4 +29,15 @@ final class GalleryViewController: UIViewController {
             make.center.equalToSuperview()
         }
     }
+}
+
+private struct GalleryPreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> GalleryViewController {
+        GalleryViewController()
+    }
+    func updateUIViewController(_ uiViewController: GalleryViewController, context: Context) {}
+}
+
+#Preview("Gallery View Controller") {
+    GalleryPreviewWrapper()
 }

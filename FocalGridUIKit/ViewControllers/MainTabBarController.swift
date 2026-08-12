@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class MainTabBarController: UITabBarController {
 
@@ -29,4 +30,15 @@ final class MainTabBarController: UITabBarController {
         viewControllers = [home, gallery]
         tabBar.tintColor = .themeMaple
     }
+}
+
+private struct MainTabBarPreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> MainTabBarController {
+        MainTabBarController()
+    }
+    func updateUIViewController(_ uiViewController: MainTabBarController, context: Context) {}
+}
+
+#Preview("Main Tab Bar Controller") {
+    MainTabBarPreviewWrapper()
 }

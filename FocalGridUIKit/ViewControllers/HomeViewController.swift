@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class HomeViewController: UIViewController {
 
@@ -27,4 +28,15 @@ final class HomeViewController: UIViewController {
             make.center.equalToSuperview()
         }
     }
+}
+
+private struct HomePreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> HomeViewController {
+        HomeViewController()
+    }
+    func updateUIViewController(_ uiViewController: HomeViewController, context: Context) {}
+}
+
+#Preview("Home View Controller") {
+    HomePreviewWrapper()
 }

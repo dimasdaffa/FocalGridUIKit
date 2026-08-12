@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class DetailCardViewController: UIViewController {
 
@@ -288,4 +289,15 @@ private final class TappableRow: UIControl {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     @objc private func tapped() { onTap(index) }
+}
+
+private struct DetailCardPreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UINavigationController {
+        UINavigationController(rootViewController: DetailCardViewController(type: .ruleOfThirds))
+    }
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+}
+
+#Preview("Detail Card View Controller") {
+    DetailCardPreviewWrapper()
 }

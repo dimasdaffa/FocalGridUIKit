@@ -27,7 +27,6 @@ final class ThumbnailCardView: UIView {
         label.numberOfLines = 0
         return label
     }()
-
     private let gridImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -110,4 +109,16 @@ final class ThumbnailCardView: UIView {
         // Hide the image slot when the asset is missing so the card stays tidy.
         gridImageView.isHidden = (gridImageView.image == nil)
     }
+}
+
+#Preview("Thumbnail Card View") {
+    let cardView = ThumbnailCardView()
+    cardView.configure(with: .ruleOfThirds)
+    
+    cardView.snp.makeConstraints { make in
+        make.width.equalTo(260)
+        make.height.equalTo(340)
+    }
+    
+    return cardView
 }

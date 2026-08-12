@@ -15,6 +15,7 @@
 
 import UIKit
 import SnapKit
+import SwiftUI
 
 final class MechanicDetailViewController: UIViewController, UIScrollViewDelegate {
 
@@ -264,4 +265,25 @@ final class MechanicDetailViewController: UIViewController, UIScrollViewDelegate
     @objc private func dismissTapped() {
         navigationController?.popViewController(animated: true)
     }
+}
+
+private struct MechanicDetailPreviewWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let composition = Composition.mockCompositions[0]
+        let breakdown = DetailCardViewModel(type: composition.type).breakdownMechanic.map { [$0] } ?? []
+        let nav = UINavigationController(
+            rootViewController: MechanicDetailViewController(
+                mechanics: composition.mechanics + breakdown,
+                startIndex: 0,
+                themeColor: composition.type.themeColor,
+                compositionTitle: composition.type.title
+            )
+        )
+        return nav
+    }
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+}
+
+#Preview("Mechanic Detail View Controller") {
+    MechanicDetailPreviewWrapper()
 }
