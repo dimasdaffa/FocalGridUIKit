@@ -8,14 +8,35 @@
 import UIKit
 
 extension UIColor {
-    static let themePrimary = UIColor(red: 242/255, green: 239/255, blue: 231/255, alpha: 1.0) // #F2EFE7 Pantone Coconut Milk
-    static let themeMaple = UIColor(red: 195/255, green: 99/255, blue: 22/255, alpha: 1.0)   // #C36316 Pantone Autumn Maple
-    static let themeCoast = UIColor(red: 10/255, green: 78/255, blue: 92/255, alpha: 1.0)    // #0A4E5C Pantone Gulf Coast
-    static let themeBlue = UIColor(red: 0/255, green: 75/255, blue: 134/255, alpha: 1.0)      // #004B86 Pantone 301 C
-    static let themeClay = UIColor(red: 164/255, green: 73/255, blue: 61/255, alpha: 1.0)     // #A4493D Pantone 7608 C
-    static let themeMonument = UIColor(red: 125/255, green: 134/255, blue: 138/255, alpha: 1.0) // #7D868A Pantone Monument
-    static let themeEclipse = UIColor(red: 52/255, green: 48/255, blue: 73/255, alpha: 1.0)   // #343049 Pantone Eclipse
-    static let themeShadow = UIColor(red: 28/255, green: 31/255, blue: 42/255, alpha: 1.0)    // #1C1F2A Pantone 532 C
-    static let themeHardShadow = UIColor(red: 36/255, green: 34/255, blue: 29/255, alpha: 1.0) // #24221D
-    static let themeBlack = UIColor(red: 17/255, green: 17/255, blue: 17/255, alpha: 1.0)      // #111111
+    
+    // MARK: - Brand & Accent Colors
+    static let themePrimary     = UIColor(hex: 0xF2EFE7) // Pantone Coconut Milk
+    static let themeMaple       = UIColor(hex: 0xC36316) // Pantone Autumn Maple
+    static let themeCoast       = UIColor(hex: 0x0A4E5C) // Pantone Gulf Coast
+    static let themeBlue        = UIColor(hex: 0x004B86) // Pantone 301 C
+    static let themeClay        = UIColor(hex: 0xA4493D) // Pantone 7608 C
+    static let themeMonument    = UIColor(hex: 0x7D868A) // Pantone Monument
+    static let themeEclipse     = UIColor(hex: 0x343049) // Pantone Eclipse
+
+    // MARK: - Backgrounds & Shadows
+    static let themeShadow      = UIColor(hex: 0x1C1F2A) // Pantone 532 C
+    static let themeHardShadow  = UIColor(hex: 0x24221D)
+    static let themeBlack       = UIColor(hex: 0x111111)
+}
+
+// MARK: - Convenience Initializers
+extension UIColor {
+    
+    /// Inisialisasi warna menggunakan nilai Hexadesimal (contoh: `0xF2EFE7`)
+    convenience init(hex: UInt32, alpha: CGFloat = 1.0) {
+        let red   = CGFloat((hex & 0xFF0000) >> 16) / 255.0
+        let green = CGFloat((hex & 0x00FF00) >> 8)  / 255.0
+        let blue  = CGFloat(hex & 0x0000FF)         / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    /// Inisialisasi warna menggunakan rentang angka 0–255
+    convenience init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat = 1.0) {
+        self.init(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: a)
+    }
 }
