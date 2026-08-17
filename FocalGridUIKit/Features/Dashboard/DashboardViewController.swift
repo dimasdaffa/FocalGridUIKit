@@ -13,6 +13,14 @@ final class DashboardViewController: UIViewController {
     weak var coordinator: AppCoordinator?
     private let viewModel: DashboardViewModel
 
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "FocalGrid"
+        label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.textColor = .themePrimary
+        return label
+    }()
+
     private let tableView = UITableView(frame: .zero, style: .plain)
 
     init(viewModel: DashboardViewModel = DashboardViewModel()) {
@@ -29,11 +37,22 @@ final class DashboardViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Sembunyikan Navigation Bar bawaan agar judul kustom tetap sticky di atas
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
+    // MARK: - UI Setup
+
     private func setupUI() {
         view.backgroundColor = .systemBackground
+
+        view.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(12)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+        }
+
         view.addSubview(tableView)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
@@ -42,7 +61,8 @@ final class DashboardViewController: UIViewController {
         tableView.register(ThumbnailCardCell.self, forCellReuseIdentifier: ThumbnailCardCell.reuseID)
 
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottom).offset(12)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 }

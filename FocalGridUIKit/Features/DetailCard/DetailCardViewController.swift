@@ -237,7 +237,10 @@ final class DetailCardViewController: UIViewController {
         guard let first = viewModel.composition?.mechanics.first else { return }
         let cta = DetailCTAView(index: 1, title: first.title, themeColor: viewModel.type.themeColor)
         cta.onStartReadingTapped = { [weak self] in self?.openReader(startIndex: 0) }
-        cta.onCameraTapped = { /* TODO: camera */ }
+        cta.onCameraTapped = { [weak self] in
+                guard let self = self else { return }
+                self.coordinator?.showCamera(for: self.viewModel.type, from: self)
+            }
         
         view.addSubview(cta)
         cta.snp.makeConstraints { make in

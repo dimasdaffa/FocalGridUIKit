@@ -54,4 +54,10 @@ final class AppCoordinator: Coordinator {
         )
         (nav ?? navigationController).pushViewController(reader, animated: true)
     }
+    
+    func showCamera(for type: CompositionType, from sourceVC: UIViewController?) {
+        let cameraVM = CameraViewModel(initialType: type)
+        let cameraVC = CameraViewController(viewModel: cameraVM)
+        (sourceVC ?? navigationController).present(cameraVC, animated: true)
+    }
 }
