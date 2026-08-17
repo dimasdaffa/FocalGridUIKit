@@ -69,11 +69,12 @@ final class MechanicCardView: UIView {
             addImage(mechanic)
             addHeadline(mechanic, topPadding: 16)
             addBody(mechanic)
-            addSpacer(16)
+            addBreakdownLayers(mechanic) // <--- MERENDER LAYERS JIKA ADA
+            addSpacer(32)
 
         case .textCentered:
             addSpacer(40)
-            addHeadline(mechanic, topPadding: 36) // headlineView's default top padding
+            addHeadline(mechanic, topPadding: 36)
             addBody(mechanic)
             addSpacer(60)
         }
@@ -82,6 +83,7 @@ final class MechanicCardView: UIView {
     // MARK: - Builders
 
     private func addHeadline(_ mechanic: GridMechanic, topPadding: CGFloat) {
+        guard !mechanic.headline.isEmpty else { return }
         let label = UILabel()
         label.numberOfLines = 0
         label.attributedText = Markdown.attributed(
@@ -94,6 +96,7 @@ final class MechanicCardView: UIView {
     }
 
     private func addBody(_ mechanic: GridMechanic) {
+        guard !mechanic.bodyContent.isEmpty else { return }
         let label = UILabel()
         label.numberOfLines = 0
         label.attributedText = Markdown.attributed(
@@ -111,17 +114,56 @@ final class MechanicCardView: UIView {
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        
         // keep the image's aspect ratio within the card width
         imageView.snp.makeConstraints { make in
             make.height.equalTo(imageView.snp.width).multipliedBy(image.size.height / image.size.width)
         }
         addRow(imageView, top: 0, bottom: 6)
 
+        let photographerName = mechanic.breakdown?.photographer ?? "dimas daffa"
         let caption = UILabel()
-        caption.text = "by: dimas daffa"
+        caption.text = "by: \(photographerName)"
         caption.font = .italicSystemFont(ofSize: 12)
         caption.textColor = UIColor.white.withAlphaComponent(0.35)
         addRow(caption, top: 0, bottom: 24)
+    }
+
+    private func addBreakdownLayers(_ mechanic: GridMechanic) {
+        guard let breakdown = mechanic.breakdown, !breakdown.layers.isEmpty else { return }
+
+        let layersStack = UIStackView()
+        layersStack.axis = .vertical
+        layersStack.spacing = 20
+
+        for layer in breakdown.layers {
+            let itemStack = UIStackView()
+            itemStack.axis = .vertical
+            itemStack.spacing = 6
+
+            let titleLabel = UILabel()
+            titleLabel.numberOfLines = 0
+            titleLabel.attributedText = Markdown.attributed(
+                layer.title,
+                font: .systemFont(ofSize: 17, weight: .semibold),
+                color: .white
+            )
+
+            let descLabel = UILabel()
+            descLabel.numberOfLines = 0
+            descLabel.attributedText = Markdown.attributed(
+                layer.description,
+                font: .systemFont(ofSize: 15, weight: .regular),
+                color: UIColor.white.withAlphaComponent(0.82),
+                lineSpacing: 5
+            )
+
+            itemStack.addArrangedSubview(titleLabel)
+            itemStack.addArrangedSubview(descLabel)
+            layersStack.addArrangedSubview(itemStack)
+        }
+
+        addRow(layersStack, top: 0, bottom: 24)
     }
 
     private func addSpacer(_ height: CGFloat) {
@@ -136,28 +178,4 @@ final class MechanicCardView: UIView {
         contentStack.addArrangedSubview(view)
         if bottom > 0 { addSpacer(bottom) }
     }
-}
-
-#Preview("Mechanic Card — Image Bottom") {
-    let mechanic = Composition.mockCompositions[0].mechanics[0]
-    let card = MechanicCardView(mechanic: mechanic, isLast: false)
-
-    card.snp.makeConstraints { make in
-        make.width.equalTo(390)
-        make.height.equalTo(800)
-    }
-
-    return card
-}
-
-#Preview("Mechanic Card — Text Centered (last)") {
-    let mechanic = Composition.mockCompositions[0].mechanics[1]
-    let card = MechanicCardView(mechanic: mechanic, isLast: true)
-
-    card.snp.makeConstraints { make in
-        make.width.equalTo(390)
-        make.height.equalTo(720)
-    }
-
-    return card
 }
