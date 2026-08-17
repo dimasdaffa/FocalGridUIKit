@@ -34,6 +34,7 @@ struct GridMechanic: Identifiable, Codable {
     let bodyContent: String
     let imageAsset: String?
     var layoutStyle: MechanicLayoutStyle = .imageBottom
+    var breakdown: PhotographicBreakdown? = nil
 }
 
 struct PhotographicBreakdown: Codable {

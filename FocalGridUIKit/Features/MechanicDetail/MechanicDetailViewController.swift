@@ -269,14 +269,13 @@ final class MechanicDetailViewController: UIViewController, UIScrollViewDelegate
 
 private struct MechanicDetailPreviewWrapper: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UINavigationController {
-        let composition = Composition.mockCompositions[0]
-        let breakdown = DetailCardViewModel(type: composition.type).breakdownMechanic.map { [$0] } ?? []
+        let viewModel = DetailCardViewModel(type: .ruleOfThirds)
         let nav = UINavigationController(
             rootViewController: MechanicDetailViewController(
-                mechanics: composition.mechanics + breakdown,
+                mechanics: viewModel.allMechanics,
                 startIndex: 0,
-                themeColor: composition.type.themeColor,
-                compositionTitle: composition.type.title
+                themeColor: viewModel.type.themeColor,
+                compositionTitle: viewModel.type.title
             )
         )
         return nav
