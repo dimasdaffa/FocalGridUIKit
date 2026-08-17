@@ -9,13 +9,14 @@ import UIKit
 import SnapKit
 import SwiftUI
 
-final class DetailCardViewController: UIViewController {
+final class DetailCardViewController: UIViewController, UIScrollViewDelegate {
     
     weak var coordinator: AppCoordinator?
     private let viewModel: DetailCardViewModel
     
     private let scrollView = UIScrollView()
-    private var ctaView: UIView? // Reference for layout inset calculation
+    private var ctaView: UIView?
+    private var isCTAVisible = false
     
     private let contentStack: UIStackView = {
         let stack = UIStackView()
@@ -52,7 +53,8 @@ final class DetailCardViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if let cta = ctaView {
-            let bottomInset = cta.frame.height + 24
+            let spacingAboveCTA: CGFloat = 12
+            let bottomInset = cta.frame.height + spacingAboveCTA + view.safeAreaInsets.bottom
             scrollView.contentInset.bottom = bottomInset
             scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         }
@@ -61,6 +63,7 @@ final class DetailCardViewController: UIViewController {
     // MARK: - Scaffold
     
     private func setupScaffold() {
+        scrollView.delegate = self
         view.addSubview(scrollView)
         scrollView.addSubview(contentStack)
         
@@ -188,7 +191,7 @@ final class DetailCardViewController: UIViewController {
         let section = UIStackView(arrangedSubviews: [heading, list])
         section.axis = .vertical
         section.spacing = 12
-        return inset(section, top: 28, left: 20, bottom: 28, right: 20)
+        return inset(section, top: 28, left: 20, bottom: 0, right: 20)
     }
     
     private func mechanicRow(index: Int, mechanic: GridMechanic) -> UIView {
@@ -238,9 +241,13 @@ final class DetailCardViewController: UIViewController {
         let cta = DetailCTAView(index: 1, title: first.title, themeColor: viewModel.type.themeColor)
         cta.onStartReadingTapped = { [weak self] in self?.openReader(startIndex: 0) }
         cta.onCameraTapped = { [weak self] in
-                guard let self = self else { return }
-                self.coordinator?.showCamera(for: self.viewModel.type, from: self)
-            }
+            guard let self = self else { return }
+            self.coordinator?.showCamera(for: self.viewModel.type, from: self)
+        }
+        
+        // Posisi awal: tersembunyi di bawah layar
+        cta.alpha = 0
+        cta.transform = CGAffineTransform(translationX: 0, y: 150)
         
         view.addSubview(cta)
         cta.snp.makeConstraints { make in
@@ -248,6 +255,41 @@ final class DetailCardViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-12)
         }
         self.ctaView = cta
+    }
+    
+    // MARK: - Scroll & CTA Popup Animation
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let threshold: CGFloat = 10
+        let shouldShow = scrollView.contentOffset.y > threshold
+        setCTAVisible(shouldShow)
+    }
+    
+    private func setCTAVisible(_ visible: Bool) {
+        guard visible != isCTAVisible else { return }
+        isCTAVisible = visible
+        
+        if visible {
+            UIView.animate(
+                withDuration: 0.45,
+                delay: 0,
+                usingSpringWithDamping: 0.8,
+                initialSpringVelocity: 0.6,
+                options: [.curveEaseOut, .allowUserInteraction]
+            ) {
+                self.ctaView?.transform = .identity
+                self.ctaView?.alpha = 1.0
+            }
+        } else {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: [.curveEaseIn, .allowUserInteraction]
+            ) {
+                self.ctaView?.transform = CGAffineTransform(translationX: 0, y: 150)
+                self.ctaView?.alpha = 0.0
+            }
+        }
     }
     
     // MARK: - Navigation
